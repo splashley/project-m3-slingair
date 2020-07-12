@@ -4,7 +4,7 @@ const confirmButton = document.getElementById("confirm-button");
 
 let selection = "";
 
-const renderSeats = () => {
+const renderSeats = (data) => {
   document.querySelector(".form-container").style.display = "block";
 
   const alpha = ["A", "B", "C", "D", "E", "F"];
@@ -22,13 +22,12 @@ const renderSeats = () => {
       const seatAvailable = `<li><label class="seat"><input type="radio" name="seat" value="${seatNumber}" /><span id="${seatNumber}" class="avail">${seatNumber}</span></label></li>`;
 
       // TODO: render the seat availability based on the data...
-      const getAvailableSeat = 
-      if (findAvailableSeat.isAvailable) {
-        seat.innerHTML = seatAvailable;
-      } else {
+      const getAvailableSeat = data.find((seat) => seat.id === seatNumber);
+      if (!getAvailableSeat.isAvailable) {
         seat.innerHTML = seatOccupied;
+      } else {
+        seat.innerHTML = seatAvailable;
       }
-      // seat.innerHTML = seatAvailable;
       row.appendChild(seat);
     }
   }
@@ -49,24 +48,17 @@ const renderSeats = () => {
   });
 };
 
-const toggleFormContent = (event) => {
+const toggleFormContent = async (event) => {
   const flightNumber = flightInput.value;
-  console.log("toggleFormContent: ", flightNumber);
-  fetch(`/flights/${flightNumber}`)
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    });
-  // TODO: contact the server to get the seating availability
-  //      - only contact the server if the flight number is this format 'SA###'.
-  //      - Do I need to create an error message if the number is not valid?
-
-  // TODO: Pass the response data to renderSeats to create the appropriate seat-type.
-
-  if (flightNumber.startsWith("SA")) {
-    renderSeats();
+  const regex = /[S][A][0-9][0-9][0-9]$/g;
+  if (flightNumber.match(regex)) {
+    fetch(`/flights/${flightNumber}`)
+      .then((response) => response.json())
+      .then((data) => {
+        renderSeats(data);
+      });
   } else {
-    window.alert("Sorry, this flight does not exist in our database.");
+    alert("This flight does not exists");
   }
 };
 
