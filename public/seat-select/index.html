@@ -38,12 +38,13 @@
                             <label for="email">Email</label>
                             <input id="email" type="email" name="email" placeholder="Your email" required />
                         </div>
-                        <button class='button confirm' id='confirm-button'>
+                        <button onsubmit="handleConfirmSeat(event)" class='button confirm' id='confirm-button'>
                             <div class="lds-dual-ring"></div>
                             Confirm<span id="seat-number"></span>
                         </button>
                     </div>
                 </form>
+                <div id="error"></div>
             </div>
         </div>
         <script src="./js/seat-select.js"></script>

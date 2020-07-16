@@ -10,16 +10,26 @@ const PORT = process.env.PORT || 8000;
 
 const handleFlight = (req, res) => {
   let flightNumber = req.params.flightNumber;
-
   let flightExists = Object.keys(flights).includes(flightNumber);
   let flightData = [];
-
   if (flightExists) {
     //Found flight get the data
     flightData = flights[flightNumber];
   }
-
   res.send(flightData);
+};
+
+// const handleConfirmation
+
+const addReservation = (req, res) => {
+  let reservation = {
+    surname: req.body.surname,
+    givenName: req.body.givenName,
+    email: req.body.email,
+    id: "",
+  };
+  reservations.push(reservation);
+  res.send(reservation);
 };
 
 express()
@@ -39,7 +49,8 @@ express()
 
   // endpoints
   .get("/flights/:flightNumber", handleFlight)
-  .get("/seat-select/confirmed/:id", handleConfirmation)
+  // .get("/seat-select/confirmed/:id", handleConfirmation)
   .get("flights", (req, res) => res.status(200).send(flights))
+  .post("/users", addReservation)
   .use((req, res) => res.send("Not Found"))
   .listen(PORT, () => console.log(`Listening on port ${PORT}`));

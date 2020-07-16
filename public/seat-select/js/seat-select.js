@@ -1,6 +1,7 @@
 const flightInput = document.getElementById("flight");
 const seatsDiv = document.getElementById("seats-section");
 const confirmButton = document.getElementById("confirm-button");
+const errorMessage = document.getElementById("error");
 
 let selection = "";
 
@@ -62,19 +63,30 @@ const toggleFormContent = async (event) => {
   }
 };
 
-const handleConfirmSeat = (event) => {
+const handleConfirmSeat = async (event) => {
   event.preventDefault();
-  // TODO: everything in here!
-  fetch("/users", {
+  const response = await fetch("/users", {
     method: "POST",
     body: JSON.stringify({
       givenName: document.getElementById("givenName").value,
+      surname: document.getElementById("surname").value,
+      email: document.getElementById("email").value,
+      seat: document.getElementById("seat-number").value,
+      flight: document.getElementById("flight").value,
     }),
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
   });
+
+  const data = await response.json();
+  console.log(document.getElementById("seat-number").value);
+  if (document.getElementById("seat-number").value === undefined) {
+    errorMessage.innerText = "You must select a seat";
+  } else {
+    window.location = `/seat-select/confirmed.html?userId=${data.userId}`;
+  }
 };
 
 flightInput.addEventListener("blur", toggleFormContent);
