@@ -5,6 +5,7 @@ const errorMessage = document.getElementById("error");
 
 let selection = "";
 
+// Render the seats based on availability
 const renderSeats = (data) => {
   document.querySelector(".form-container").style.display = "block";
 
@@ -44,6 +45,7 @@ const renderSeats = (data) => {
       });
       document.getElementById(seat.value).classList.add("selected");
       document.getElementById("seat-number").innerText = `(${selection})`;
+      document.getElementById("seat-number").value = `${selection}`;
       confirmButton.disabled = false;
     };
   });
@@ -63,6 +65,7 @@ const toggleFormContent = async (event) => {
   }
 };
 
+// Creates a POST request after submitting info
 const handleConfirmSeat = async (event) => {
   event.preventDefault();
   const response = await fetch("/users", {
@@ -80,24 +83,14 @@ const handleConfirmSeat = async (event) => {
     },
   });
 
+  // Verify that a seat has been selected
   const data = await response.json();
   console.log(document.getElementById("seat-number").value);
   if (document.getElementById("seat-number").value === undefined) {
     errorMessage.innerText = "You must select a seat";
   } else {
-    window.location = `/seat-select/confirmed.html?userId=${data.userId}`;
+    window.location = `/seat-select/confirmed.html?userId=${data.id}`;
   }
 };
 
 flightInput.addEventListener("blur", toggleFormContent);
-
-// // to have a dropdown appear with flight numbers on the index page
-
-// const flightList = (flights) => {
-//   const dataList = document.querySelector("#flight-numbers");
-//   flights.forEach((flightNumber) => {
-//     const wrapper = document.createElement("div");
-//     wrapper.innerHTML = `<option value="${flightNumber}">`;
-//     dataList.appendChild(wrapper.firstChild);
-//   });
-// };
